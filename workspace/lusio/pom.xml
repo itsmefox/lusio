@@ -5,6 +5,7 @@
 	<artifactId>lusio</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Lusio</name>
+	<packaging>war</packaging>
 
 	<organization>
 		<name>Viascom GmbH</name>

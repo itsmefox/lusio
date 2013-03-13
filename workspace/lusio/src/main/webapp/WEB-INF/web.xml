@@ -4,10 +4,10 @@
          xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
          version="3.0">
-    <display-name>productmanager</display-name>
+    <display-name>lusio</display-name>
     <servlet>
-        <display-name>productmanager</display-name>
-        <servlet-name>productmanager</servlet-name>
+        <display-name>lusio</display-name>
+        <servlet-name>lusio</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer
         </servlet-class>
         <init-param>
@@ -21,7 +21,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>productmanager</servlet-name>
+        <servlet-name>lusio</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>
