@@ -52,4 +52,19 @@ public class Game {
 		
 		return result;
 	}
+	
+	@GET
+	@Path("/{gameId}/tips")
+	@Produces("application/json;charset=UTF-8")
+	public ServiceResult<List<Tip>> getLatestTips(@Context UriInfo url,
+			@PathParam("sessionId") String sessionId,
+			@PathParam("gameId") String gameId){
+		
+		List<Tip> tips = gameBean.getLatestTips();
+		ServiceResult<List<Tip>> result = new ServiceResult<List<Tip>>();
+		result.setStatus(ServiceResultStatus.successful);
+		result.setContent(tips);
+		
+		return result;
+	}
 }
