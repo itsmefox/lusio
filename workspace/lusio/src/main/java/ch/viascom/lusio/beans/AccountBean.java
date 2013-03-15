@@ -6,19 +6,40 @@ import javax.persistence.EntityManager;
 
 import ch.viascom.lusio.module.AccountModel;
 import ch.viascom.lusio.module.SessionModel;
+import ch.viascom.lusio.util.LangUtil;
+import ch.viascom.lusio.util.Security;
 
 @Stateless
 public class AccountBean {
 	
-	public SessionModel login(String username,String password){
+	public SessionModel login(final String username,final String password){
+		
+		String dbUsername = "testUser";
+		String dbPassword = "geheimnis";
+		
+		Boolean sessionSuccessfullCreated = false;
+		SessionModel session = null;
+		
+		if (LangUtil.saveEquals(dbUsername, username) && LangUtil.saveEquals(dbPassword, Security.MD5(password))) {
+			// Create Session
+			
+			
+			sessionSuccessfullCreated = true;
+			// 
+		}
 		
 		
 		
-		return null;
+		return session;
 	}
 	
 	public boolean logout(String sessionId){
-		return false;
+		
+		Boolean sessionSuccessfullDeleted = false;
+		
+		
+		
+		return sessionSuccessfullDeleted;
 	}
 	
 	public AccountModel getAccountInformations(String sessionId){
