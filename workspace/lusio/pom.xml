@@ -1,11 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>ch.viascom</groupId>
 	<artifactId>lusio</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Lusio</name>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
+
+	<name>lusio</name>
 
 	<organization>
 		<name>Viascom GmbH</name>
@@ -16,8 +19,74 @@
 		<url>http://workspace.viascom.ch</url>
 	</issueManagement>
 
-	<dependencies>
+	<modules>
+		<module>lusio-web</module>
+		<module>lusio-beans</module>
+	</modules>
 
+	<profiles>
+		<profile>
+			<id>deploy-local</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<version>1.0.3</version>
+						<configuration>
+							<wait>false</wait>
+							<container>
+								<containerId>glassfish3x</containerId>
+								<type>installed</type>
+								<home>/Users/patrickbosch/ApplicationServer/glassfish3.1.2</home>
+							</container>
+							<configuration>
+								<type>standalone</type>
+
+								<properties>
+									<cargo.hostname>localhost</cargo.hostname>
+									<cargo.servlet.port>8082</cargo.servlet.port>
+									<!-- Edit this properties for deployment -->
+									<cargo.remote.username>admin</cargo.remote.username>
+									<cargo.remote.password>admin</cargo.remote.password>
+								</properties>
+							</configuration>
+							<deployer>
+								<type>installed</type>
+								<deployables>
+									<deployable>
+										<groupId>${project.groupId}</groupId>
+										<artifactId>${project.artifactId}</artifactId>
+										<type>war</type>
+										<location>${project.build.directory}/lusio-web-1.0.0-SNAPSHOT.${project.packaging}</location>
+									</deployable>
+								</deployables>
+							</deployer>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>ch.viascom.vision.share</groupId>
+				<artifactId>base-jersey</artifactId>
+				<version>3.1.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.viascom</groupId>
+				<artifactId>lusio-beans</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -40,78 +109,19 @@
 			<type>pom</type>
 		</dependency>
 
+		<!-- Testing -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-jaxrs</artifactId>
-			<version>1.9.10</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-xc</artifactId>
-			<version>1.9.10</version>
-		</dependency>
-
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>3.3.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-core</artifactId>
-			<version>1.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-servlet</artifactId>
-			<version>1.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>jsr311-api</artifactId>
-			<version>1.1-ea</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-json</artifactId>
-			<version>1.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.codehaus.jettison</groupId>
-			<artifactId>jettison</artifactId>
-			<version>1.3.2</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.4</version>
+			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.joda</groupId>
-			<artifactId>joda-convert</artifactId>
-			<version>1.2</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -127,4 +137,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
