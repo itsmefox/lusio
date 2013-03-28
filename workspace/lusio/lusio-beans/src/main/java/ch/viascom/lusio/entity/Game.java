@@ -22,6 +22,10 @@ public class Game implements Serializable {
 
 	private int status;
 
+	private double income;
+	
+	private double outgoing;
+	
 	//bi-directional many-to-one association to Field
 	@ManyToOne
 	@JoinColumn(name="Field_FK")
@@ -56,6 +60,22 @@ public class Game implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	public double getIncome() {
+		return this.income;
+	}
+
+	public void setIncome(double income) {
+		this.income = income;
+	}
+	
+	public double getOutgoing() {
+		return this.outgoing;
+	}
+
+	public void setOutgoing(double outgoing) {
+		this.outgoing = outgoing;
 	}
 
 	public Field getField() {

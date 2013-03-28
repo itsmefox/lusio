@@ -1,8 +1,8 @@
 package ch.viascom.lusio;
 
 import javax.annotation.ManagedBean;
-import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -10,59 +10,72 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import ch.viascom.base.exceptions.ServiceException;
 import ch.viascom.base.exceptions.ServiceResult;
 import ch.viascom.base.exceptions.ServiceResultStatus;
 import ch.viascom.lusio.beans.AccountBean;
 import ch.viascom.lusio.beans.TipBean;
+import ch.viascom.lusio.interceptor.IsAuthorized;
 import ch.viascom.lusio.module.AccountModel;
 
 @ManagedBean
 @Path("{sessionId}/tip")
 public class Tips {
 
-	
-	@EJB
+	@Inject
 	TipBean tipBean;
-	
-	@EJB
-	AccountBean accountBean;
-	
-	@POST
+
+	@Inject
+	AccountBean account;
+
+	@IsAuthorized
+	@GET
 	@Path("/create")
-	@Consumes("application/x-www-form-urlencoded")
 	@Produces("application/json;charset=UTF-8")
 	public ServiceResult<String> createTip(@Context UriInfo url,
+			@Context HttpServletRequest hsr,
 			@PathParam("sessionId") String sessionId,
-			@FormParam("tipId") String tipId,
-			@FormParam("fieldId") String fieldId,
-			@FormParam("amount") double amount) {
+			@QueryParam("tipid") String tipId,
+			@QueryParam("fieldid") String fieldId,
+			@QueryParam("gameid") String gameId,
+			@QueryParam("amount") int amount) throws ServiceException {
 
-		AccountModel user = accountBean.getAccountInformations(sessionId);
-		
-		String newTipId = tipBean.createTip(tipId, fieldId, amount,user.getId());
+		String newTipId = null;
+
+		AccountModel user = account.getAccountInformations(sessionId);
+		System.out.println(tipId);
+		newTipId = tipBean.createTip(tipId, fieldId, gameId, amount, user.getId());
+
 		ServiceResult<String> result = new ServiceResult<String>();
-		result.setStatus(ServiceResultStatus.successful);
+		result.setStatus((newTipId != null) ? ServiceResultStatus.successful
+				: ServiceResultStatus.failed);
 		result.setContent(newTipId);
 
 		return result;
 
 	}
-	
+
+	@IsAuthorized
 	@GET
 	@Path("{tipId}/remove")
 	@Produces("application/json;charset=UTF-8")
 	public ServiceResult<String> deleteTip(@Context UriInfo url,
+			@Context HttpServletRequest hsr,
 			@PathParam("sessionId") String sessionId,
 			@PathParam("tipId") String tipId) {
 
-		AccountModel user = accountBean.getAccountInformations(sessionId);
-		
-		Boolean success = tipBean.deleteTip(tipId, user.getId());
+		Boolean success = false;
+
+		AccountModel user = account.getAccountInformations(sessionId);
+		success = tipBean.deleteTip(tipId, user.getId());
+
 		ServiceResult<String> result = new ServiceResult<String>();
-		result.setStatus((success) ? ServiceResultStatus.successful : ServiceResultStatus.failed);
+		result.setStatus((success) ? ServiceResultStatus.successful
+				: ServiceResultStatus.failed);
 		result.setContent(null);
 
 		return result;
