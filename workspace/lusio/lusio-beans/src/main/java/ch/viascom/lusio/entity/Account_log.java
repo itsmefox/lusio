@@ -2,7 +2,6 @@ package ch.viascom.lusio.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -20,9 +19,9 @@ public class Account_log implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 
-	private BigDecimal new_value;
+	private int new_value;
 
-	private BigDecimal old_value;
+	private int old_value;
 
 	//bi-directional many-to-one association to Account
 	@ManyToOne
@@ -48,19 +47,19 @@ public class Account_log implements Serializable {
 		this.date = date;
 	}
 
-	public BigDecimal getNew_value() {
+	public int getNew_value() {
 		return this.new_value;
 	}
 
-	public void setNew_value(BigDecimal new_value) {
+	public void setNew_value(int new_value) {
 		this.new_value = new_value;
 	}
 
-	public BigDecimal getOld_value() {
+	public int getOld_value() {
 		return this.old_value;
 	}
 
-	public void setOld_value(BigDecimal old_value) {
+	public void setOld_value(int old_value) {
 		this.old_value = old_value;
 	}
 

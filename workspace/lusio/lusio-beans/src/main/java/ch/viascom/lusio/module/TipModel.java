@@ -12,7 +12,7 @@ import ch.viascom.lusio.entity.Tip;
 public class TipModel {
 	private String tip_ID;
 
-	private BigDecimal amount;
+	private int amount;
 
 	private DateTime date;
 

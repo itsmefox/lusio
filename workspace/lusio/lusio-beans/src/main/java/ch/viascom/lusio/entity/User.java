@@ -2,6 +2,7 @@ package ch.viascom.lusio.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -10,6 +11,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Cacheable(false)
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 

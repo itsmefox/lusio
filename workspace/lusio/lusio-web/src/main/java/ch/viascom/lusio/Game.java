@@ -12,11 +12,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import ch.viascom.base.exceptions.ServiceException;
 import ch.viascom.base.exceptions.ServiceResult;
 import ch.viascom.base.exceptions.ServiceResultStatus;
 import ch.viascom.lusio.beans.AccountBean;
 import ch.viascom.lusio.beans.GameBean;
-import ch.viascom.lusio.entity.Tip;
 import ch.viascom.lusio.interceptor.IsAuthorized;
 import ch.viascom.lusio.module.GameModel;
 import ch.viascom.lusio.module.TipModel;
@@ -38,7 +38,7 @@ public class Game {
 	public ServiceResult<GameModel> getGameStats(@Context UriInfo url,
 			@Context HttpServletRequest hsr,
 			@PathParam("sessionId") String sessionId,
-			@PathParam("gameId") String gameId) {
+			@PathParam("gameId") String gameId) throws ServiceException {
 
 		GameModel gameModel = null;
 
@@ -57,7 +57,7 @@ public class Game {
 	@Produces("application/json;charset=UTF-8")
 	public ServiceResult<List<GameModel>> getLatestGames(@Context UriInfo url,
 			@Context HttpServletRequest hsr,
-			@PathParam("sessionId") String sessionId) {
+			@PathParam("sessionId") String sessionId) throws ServiceException {
 
 		List<GameModel> games = null;
 
@@ -77,12 +77,12 @@ public class Game {
 	public ServiceResult<List<TipModel>> getLatestTips(@Context UriInfo url,
 			@Context HttpServletRequest hsr,
 			@PathParam("sessionId") String sessionId,
-			@PathParam("gameId") String gameId) {
+			@PathParam("gameId") String gameId) throws ServiceException {
 
 		List<TipModel> tip = null;
 
 		tip = gameBean.getLatestTips(gameId);
-System.out.println(tip.size());
+
 		ServiceResult<List<TipModel>> result = new ServiceResult<List<TipModel>>();
 		result.setStatus(ServiceResultStatus.successful);
 		result.setContent(tip);

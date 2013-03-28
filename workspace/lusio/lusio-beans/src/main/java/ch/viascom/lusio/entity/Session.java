@@ -2,6 +2,7 @@ package ch.viascom.lusio.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.util.Date;
 
 
@@ -10,6 +11,7 @@ import java.util.Date;
  * 
  */
 @Entity
+@Cacheable(false)
 public class Session implements Serializable {
 	private static final long serialVersionUID = 1L;
 

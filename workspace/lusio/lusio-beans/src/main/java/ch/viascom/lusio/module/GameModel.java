@@ -20,7 +20,6 @@ public class GameModel {
 		date = new DateTime(game.getDate());
 		field = (game.getField() != null) ? new FieldModel(game.getField())
 				: null;
-		income = game.getIncome();
 		outgonig = game.getOutgoing();
 
 		switch (game.getStatus()) {

@@ -2,6 +2,7 @@ package ch.viascom.lusio.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Cacheable(false)
 public class Game implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -21,8 +23,6 @@ public class Game implements Serializable {
 	private Date date;
 
 	private int status;
-
-	private double income;
 	
 	private double outgoing;
 	
@@ -60,14 +60,6 @@ public class Game implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
-	}
-	
-	public double getIncome() {
-		return this.income;
-	}
-
-	public void setIncome(double income) {
-		this.income = income;
 	}
 	
 	public double getOutgoing() {

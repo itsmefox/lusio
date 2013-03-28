@@ -2,6 +2,7 @@ package ch.viascom.lusio.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -11,13 +12,14 @@ import java.util.Date;
  * 
  */
 @Entity
+@Cacheable(false)
 public class Tip implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String tip_ID;
 
-	private BigDecimal amount;
+	private int amount;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
@@ -48,11 +50,11 @@ public class Tip implements Serializable {
 		this.tip_ID = tip_ID;
 	}
 
-	public BigDecimal getAmount() {
+	public int getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 

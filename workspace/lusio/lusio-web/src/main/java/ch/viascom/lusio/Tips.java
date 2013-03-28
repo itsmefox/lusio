@@ -3,10 +3,7 @@ package ch.viascom.lusio;
 import javax.annotation.ManagedBean;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -66,7 +63,7 @@ public class Tips {
 	public ServiceResult<String> deleteTip(@Context UriInfo url,
 			@Context HttpServletRequest hsr,
 			@PathParam("sessionId") String sessionId,
-			@PathParam("tipId") String tipId) {
+			@PathParam("tipId") String tipId) throws ServiceException {
 
 		Boolean success = false;
 

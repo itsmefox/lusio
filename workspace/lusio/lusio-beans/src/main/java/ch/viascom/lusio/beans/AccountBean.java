@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import ch.viascom.base.exceptions.ServiceException;
 import ch.viascom.lusio.entity.Session;
 import ch.viascom.lusio.entity.User;
 import ch.viascom.lusio.module.AccountModel;
@@ -25,7 +26,7 @@ public class AccountBean {
 	AccountDBBean accountDBBean;
 
 	public SessionModel login(final String username, final String password,
-			final String ipAddress) {
+			final String ipAddress) throws ServiceException {
 
 		User user = accountDBBean.getDBUser(username);
 		String dbPassword = user.getPassword();
@@ -49,7 +50,7 @@ public class AccountBean {
 		return accountDBBean.getCredit(userId);
 	}
 
-	public AccountModel getAccountInformations(String sessionId) {
+	public AccountModel getAccountInformations(String sessionId) throws ServiceException {
 		return accountDBBean.getAccountInformations(sessionId);
 	}
 

@@ -25,7 +25,7 @@ public class TipBean {
 		
 	}
 
-	public boolean deleteTip(String tipId, String userId) {
-		return false;
+	public boolean deleteTip(String tipId, String userId) throws ServiceException {
+		return tipDBBean.removeTip(tipId, userId);
 	}
 }

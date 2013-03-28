@@ -12,6 +12,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import ch.viascom.base.exceptions.ServiceException;
 import ch.viascom.base.exceptions.ServiceResult;
 import ch.viascom.base.exceptions.ServiceResultStatus;
 import ch.viascom.lusio.beans.AccountBean;
@@ -52,7 +53,7 @@ public class Account {
 	@Produces("application/json;charset=UTF-8")
 	public ServiceResult<AccountModel> getAccountInformations(
 			@Context UriInfo url, @Context HttpServletRequest hsr,
-			@PathParam("sessionId") String sessionId) {
+			@PathParam("sessionId") String sessionId) throws ServiceException {
 
 		AccountModel accountModel = null;
 
@@ -74,7 +75,7 @@ public class Account {
 	public ServiceResult<SessionModel> login(@Context UriInfo url,
 			@Context HttpServletRequest hsr,
 			@QueryParam("username") String username,
-			@QueryParam("password") String password) {
+			@QueryParam("password") String password) throws ServiceException {
 
 		SessionModel session = account.login(username, password,
 				hsr.getHeader("X-Forwarded-For"));
