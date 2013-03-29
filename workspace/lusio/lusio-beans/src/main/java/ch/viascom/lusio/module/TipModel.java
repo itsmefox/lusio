@@ -1,7 +1,5 @@
 package ch.viascom.lusio.module;
 
-import java.math.BigDecimal;
-
 import org.joda.time.DateTime;
 
 import lombok.Data;

@@ -17,6 +17,8 @@ import ch.viascom.base.exceptions.ServiceResult;
 import ch.viascom.base.exceptions.ServiceResultStatus;
 import ch.viascom.lusio.beans.AccountBean;
 import ch.viascom.lusio.beans.GameBean;
+import ch.viascom.lusio.beans.GameDBBean;
+import ch.viascom.lusio.beans.RouletteBean;
 import ch.viascom.lusio.interceptor.IsAuthorized;
 import ch.viascom.lusio.module.GameModel;
 import ch.viascom.lusio.module.TipModel;
@@ -30,6 +32,12 @@ public class Game {
 
 	@Inject
 	AccountBean account;
+	
+	@Inject
+	RouletteBean rouletteBean;
+	
+	@Inject
+    GameDBBean gameDBBean;
 
 	@IsAuthorized
 	@GET
@@ -89,4 +97,23 @@ public class Game {
 
 		return result;
 	}
+	
+//	@IsAuthorized
+//	@GET
+//	@Path("/{gameId}/process")
+//	@Produces("application/json;charset=UTF-8")
+//	public ServiceResult<String> process(@Context UriInfo url,
+//			@Context HttpServletRequest hsr,
+//			@PathParam("sessionId") String sessionId,
+//			@PathParam("gameId") String gameId) throws ServiceException {
+//
+//		rouletteBean.processGame();
+//	    gameDBBean.startNewGame();
+//	    
+//		ServiceResult<String> result = new ServiceResult<String>();
+//		result.setStatus(ServiceResultStatus.successful);
+//		result.setContent("Processed");
+//
+//		return result;
+//	}
 }

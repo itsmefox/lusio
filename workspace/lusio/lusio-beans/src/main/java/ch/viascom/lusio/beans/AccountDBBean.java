@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,6 +19,7 @@ import org.joda.time.DateTime;
 
 import ch.viascom.base.exceptions.ServiceException;
 import ch.viascom.lusio.entity.Account;
+import ch.viascom.lusio.entity.Account_log;
 import ch.viascom.lusio.entity.Session;
 import ch.viascom.lusio.entity.User;
 import ch.viascom.lusio.module.AccountModel;
@@ -200,5 +202,39 @@ public class AccountDBBean {
 				em.getTransaction().commit();
 			}
 		}
+	}
+	
+	public final void payout(String userId, int amount){
+		em.getTransaction().begin();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		CriteriaQuery<User> q = cb.createQuery(User.class);
+		Root<User> c = q.from(User.class);
+
+		q.select(c).where(cb.equal(c.get("user_ID"), userId));
+
+		TypedQuery<User> query = em.createQuery(q);
+
+		User user = query.getSingleResult();
+		List<Account> accounts = user.getAccounts();
+		
+		Account account = accounts.get(0);
+		em.lock(account, LockModeType.PESSIMISTIC_READ);
+		
+		int newAmount = account.getCredit() + amount;
+
+		Account_log log = new Account_log();
+		log.setAccount(account);
+		log.setDate(new Date());
+		log.setOld_value(account.getCredit());
+		log.setNew_value(newAmount);
+		log.setAccount_log_ID(UUID.randomUUID().toString());
+
+		account.setCredit(newAmount);
+		account.getAccountLogs().add(log);
+		em.merge(account);
+		em.persist(log);
+		
+		em.getTransaction().commit();
 	}
 }

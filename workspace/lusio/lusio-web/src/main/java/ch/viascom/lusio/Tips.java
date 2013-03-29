@@ -36,7 +36,6 @@ public class Tips {
 	public ServiceResult<String> createTip(@Context UriInfo url,
 			@Context HttpServletRequest hsr,
 			@PathParam("sessionId") String sessionId,
-			@QueryParam("tipid") String tipId,
 			@QueryParam("fieldid") String fieldId,
 			@QueryParam("gameid") String gameId,
 			@QueryParam("amount") int amount) throws ServiceException {
@@ -44,8 +43,7 @@ public class Tips {
 		String newTipId = null;
 
 		AccountModel user = account.getAccountInformations(sessionId);
-		System.out.println(tipId);
-		newTipId = tipBean.createTip(tipId, fieldId, gameId, amount, user.getId());
+		newTipId = tipBean.createTip(fieldId, gameId, amount, user.getId());
 
 		ServiceResult<String> result = new ServiceResult<String>();
 		result.setStatus((newTipId != null) ? ServiceResultStatus.successful
