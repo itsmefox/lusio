@@ -1,5 +1,6 @@
 package ch.viascom.lusio.beans;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -195,7 +196,18 @@ public class TipDBBean {
         return field;
     }
 
-    public List<Tip> getTipsByField(String fieldId) {
-        return getField(fieldId).getTips();
+    public List<Tip> getTipsByField(String fieldId, String gameId) {
+        
+        List<Tip> tips = new ArrayList<>();
+        
+        for (Iterator<Tip> iterator = getField(fieldId).getTips().iterator(); iterator.hasNext();) {
+            Tip tip = (Tip) iterator.next();
+            if(tip.getGame().getGame_ID() == gameId){
+                tips.add(tip);
+            }
+        }
+        return tips;
     }
+    
+    
 }

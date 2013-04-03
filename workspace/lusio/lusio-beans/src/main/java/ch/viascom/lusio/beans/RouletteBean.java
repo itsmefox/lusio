@@ -32,16 +32,17 @@ public class RouletteBean {
 
         // Get Open-Game
         Game game = gameDBBean.getOpenGame();
-
+        String gameId = game.getGame_ID();
+        
         // Set Game to PROCESSING
-        setGameStatus(game.getGame_ID(), GameStatus.PROCESSING);
+        setGameStatus(gameId, GameStatus.PROCESSING);
 
         // Get Field
         int field = calculateNumber();
         Field fieldObject = gameDBBean.getField(Integer.toString(field));
 
         // Number-Wins (*36)
-        List<Tip> tipsNumberWin = tipDBBean.getTipsByField(fieldObject.getField_ID());
+        List<Tip> tipsNumberWin = tipDBBean.getTipsByField(fieldObject.getField_ID(),gameId);
         outgoing += payout(tipsNumberWin, 36);
 
         // Color-Wins
@@ -53,7 +54,7 @@ public class RouletteBean {
         }
         if (color != null) {
             Field colorField = gameDBBean.getField(color);
-            List<Tip> tipsColorWin = tipDBBean.getTipsByField(colorField.getField_ID());
+            List<Tip> tipsColorWin = tipDBBean.getTipsByField(colorField.getField_ID(),gameId);
             outgoing += payout(tipsColorWin, 2);
         }
 
@@ -66,7 +67,7 @@ public class RouletteBean {
         }
         if (evenOdd != null) {
             Field evenOddField = gameDBBean.getField(evenOdd);
-            List<Tip> tipsEvenOddWin = tipDBBean.getTipsByField(evenOddField.getField_ID());
+            List<Tip> tipsEvenOddWin = tipDBBean.getTipsByField(evenOddField.getField_ID(),gameId);
             outgoing += payout(tipsEvenOddWin, 2);
         }
 
@@ -79,7 +80,7 @@ public class RouletteBean {
         }
         if (numbersHalf != null) {
             Field numbersHalfField = gameDBBean.getField(numbersHalf);
-            List<Tip> tipsNumbersHalfWin = tipDBBean.getTipsByField(numbersHalfField.getField_ID());
+            List<Tip> tipsNumbersHalfWin = tipDBBean.getTipsByField(numbersHalfField.getField_ID(),gameId);
             outgoing += payout(tipsNumbersHalfWin, 2);
         }
 
@@ -94,7 +95,7 @@ public class RouletteBean {
         }
         if (numbersTripple != null) {
             Field numbersTrippleField = gameDBBean.getField(numbersTripple);
-            List<Tip> tipsNumbersTrippleWin = tipDBBean.getTipsByField(numbersTrippleField.getField_ID());
+            List<Tip> tipsNumbersTrippleWin = tipDBBean.getTipsByField(numbersTrippleField.getField_ID(),gameId);
             outgoing += payout(tipsNumbersTrippleWin, 3);
         }
 
@@ -114,21 +115,24 @@ public class RouletteBean {
         }
         if (numbersTwoToOne != null) {
             Field numbersTwotoOneField = gameDBBean.getField(numbersTwoToOne);
-            List<Tip> tipsNumbersTwotoOneWin = tipDBBean.getTipsByField(numbersTwotoOneField.getField_ID());
+            List<Tip> tipsNumbersTwotoOneWin = tipDBBean.getTipsByField(numbersTwotoOneField.getField_ID(),gameId);
             outgoing += payout(tipsNumbersTwotoOneWin, 3);
         }
 
         // Set Outgoing
-        gameDBBean.setOutgoing(game.getGame_ID(), outgoing);
+        gameDBBean.setOutgoing(gameId, outgoing);
         
         // Set Income
-        gameDBBean.setIncome(game.getGame_ID(), gameDBBean.getIncome(game.getGame_ID()));
+        gameDBBean.setIncome(gameId, gameDBBean.getIncome(gameId));
 
         // Set Winfield
-        gameDBBean.setWinField(game.getGame_ID(), fieldObject);
+        gameDBBean.setWinField(gameId, fieldObject);
 
+        // Delete Tips
+        
+        
         // Set Game to CLOSED
-        setGameStatus(game.getGame_ID(), GameStatus.CLOSED);
+        setGameStatus(gameId, GameStatus.CLOSED);
     }
 
     public int payout(List<Tip> tips, int factor) {

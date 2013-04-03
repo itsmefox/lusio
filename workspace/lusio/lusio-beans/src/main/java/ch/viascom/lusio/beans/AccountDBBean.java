@@ -45,8 +45,8 @@ public class AccountDBBean {
 
 			return user;
 		} catch (NoResultException e) {
-			throw new ServiceException("NO_RESULT_EXCEPTION",
-					"There ist no tip with this id.")
+			throw new ServiceException("WRONG_CREDENTIALS",
+					"USername or Password is wrong.")
 					.setResponseStatusCode(404);
 		}
 	}

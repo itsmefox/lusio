@@ -106,7 +106,7 @@ public class GameDBBean {
 			return tipModels;
 		} catch (NoResultException e) {
 			throw new ServiceException("NO_RESULT_EXCEPTION",
-					"There ist no games.")
+					"There are no games.")
 					.setResponseStatusCode(404);
 		}
 	}
