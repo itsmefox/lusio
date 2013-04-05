@@ -46,7 +46,7 @@ public class AccountDBBean {
 			return user;
 		} catch (NoResultException e) {
 			throw new ServiceException("WRONG_CREDENTIALS",
-					"USername or Password is wrong.")
+					"Username or Password is wrong.")
 					.setResponseStatusCode(404);
 		}
 	}
@@ -124,9 +124,12 @@ public class AccountDBBean {
 		return credit;
 	}
 
-	public final SessionModel createSessionId(User user, String ipAddress) {
-		String guid = UUID.randomUUID().toString();
+	public final SessionModel createSessionId(User user, String ipAddress) throws ServiceException {
+	    String guid = UUID.randomUUID().toString();
 
+	    // Delete Session
+        deleteSession(user);
+	    
 		SessionModel sessionModel = new SessionModel();
 
 		sessionModel.setSessionId(guid);
@@ -152,6 +155,21 @@ public class AccountDBBean {
 		em.getTransaction().commit();
 
 		return sessionModel;
+	}
+	
+	public void deleteSession(User user) throws ServiceException{
+
+	    List<Session> sessions = user.getSessions();
+
+	    for (Iterator<Session> iterator = sessions.iterator(); iterator.hasNext();) {
+            Session session = (Session) iterator.next();
+            em.getTransaction().begin();
+            user.getSessions().remove(session);
+            em.persist(user);
+            em.remove(session);
+            em.getTransaction().commit();
+        }
+	    
 	}
 
 	public boolean logout(String sessionId) {

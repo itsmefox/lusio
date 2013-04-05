@@ -31,15 +31,15 @@ public class AccountBean {
 		User user = accountDBBean.getDBUser(username);
 		String dbPassword = user.getPassword();
 
-		SessionModel session = null;
-
 		if (LangUtil.saveEquals(dbPassword, Security.MD5(password))) {
-			// Create Session
+		    // Create Session
 			return accountDBBean.createSessionId(user, ipAddress);
 
+		}else{
+		    throw new ServiceException("WRONG_CREDENTIALS",
+                    "Username or Password is wrong.")
+                    .setResponseStatusCode(404);
 		}
-
-		return session;
 	}
 
 	public boolean logout(String sessionId) {
