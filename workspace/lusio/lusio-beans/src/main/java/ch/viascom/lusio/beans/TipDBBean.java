@@ -196,11 +196,11 @@ public class TipDBBean {
         return field;
     }
 
-    public List<Tip> getTipsByField(String fieldId, String gameId) {
+    public List<Tip> getTipsByField(Field field, String gameId) {
         
         List<Tip> tips = new ArrayList<>();
         
-        for (Iterator<Tip> iterator = getField(fieldId).getTips().iterator(); iterator.hasNext();) {
+        for (Iterator<Tip> iterator = field.getTips().iterator(); iterator.hasNext();) {
             Tip tip = (Tip) iterator.next();
             if(tip.getGame().getGame_ID() == gameId){
                 tips.add(tip);

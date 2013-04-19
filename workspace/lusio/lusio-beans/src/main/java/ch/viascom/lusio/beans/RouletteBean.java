@@ -27,12 +27,8 @@ public class RouletteBean {
     @Inject
     AccountDBBean accountDBBean;
 
-    public void processGame() throws ServiceException {
+    public void processGame(String gameId) throws ServiceException {
         int outgoing = 0;
-
-        // Get Open-Game
-        Game game = gameDBBean.getOpenGame();
-        String gameId = game.getGame_ID();
 
         // Set Game to PROCESSING
         setGameStatus(gameId, GameStatus.PROCESSING);
@@ -42,36 +38,39 @@ public class RouletteBean {
         Field fieldObject = gameDBBean.getField(Integer.toString(field));
 
         // Number-Wins (*36)
-        List<Tip> tipsNumberWin = tipDBBean.getTipsByField(fieldObject.getField_ID(), gameId);
+        List<Tip> tipsNumberWin = tipDBBean.getTipsByField(fieldObject, gameId);
         outgoing += payout(tipsNumberWin, 36);
 
-        // Color-Wins
-        String color = null;
-        if (fieldObject.getColor() != null && fieldObject.getColor() == "R") {
-            color = "RED";
-        } else if (fieldObject.getColor() != null && fieldObject.getColor() == "B") {
-            color = "BLACK";
-        }
-        if (color != null) {
-            Field colorField = gameDBBean.getField(color);
-            List<Tip> tipsColorWin = tipDBBean.getTipsByField(colorField.getField_ID(), gameId);
-            outgoing += payout(tipsColorWin, 2);
-        }
+        outgoing = colorWins(outgoing, gameId, fieldObject.getColor());
 
         // ODD/EVEN-Wins
-        String evenOdd = null;
-        if (field % 2 == 0) {
-            evenOdd = "EVEN";
-        } else {
-            evenOdd = "ODD";
-        }
-        if (evenOdd != null) {
-            Field evenOddField = gameDBBean.getField(evenOdd);
-            List<Tip> tipsEvenOddWin = tipDBBean.getTipsByField(evenOddField.getField_ID(), gameId);
-            outgoing += payout(tipsEvenOddWin, 2);
-        }
+        outgoing = evenOddWins(outgoing, gameId, field);
 
         // 1-18/19-36 Wins
+        outgoing = halfWins(outgoing, gameId, field);
+
+        // 1st12 / 2nd12 / 3rd12 Wins
+        outgoing = twelverWins(outgoing, gameId, field);
+
+        // 2to1 Wins
+        outgoing = twoToOneWins(outgoing, gameId, field);
+
+        // Set Outgoing
+        gameDBBean.setOutgoing(gameId, outgoing);
+
+        // Set Income
+        gameDBBean.setIncome(gameId, gameDBBean.getIncome(gameId));
+
+        // Set Winfield
+        gameDBBean.setWinField(gameId, fieldObject);
+
+        // Delete Tips
+
+        // Set Game to CLOSED
+        setGameStatus(gameId, GameStatus.CLOSED);
+    }
+
+    private int halfWins(int outgoing, String gameId, int field) throws ServiceException {
         String numbersHalf = null;
         if (field >= 1 && field <= 18) {
             numbersHalf = "1to18";
@@ -80,11 +79,13 @@ public class RouletteBean {
         }
         if (numbersHalf != null) {
             Field numbersHalfField = gameDBBean.getField(numbersHalf);
-            List<Tip> tipsNumbersHalfWin = tipDBBean.getTipsByField(numbersHalfField.getField_ID(), gameId);
+            List<Tip> tipsNumbersHalfWin = tipDBBean.getTipsByField(numbersHalfField, gameId);
             outgoing += payout(tipsNumbersHalfWin, 2);
         }
+        return outgoing;
+    }
 
-        // 1st12 / 2nd12 / 3rd12 Wins
+    private int twelverWins(int outgoing, String gameId, int field) throws ServiceException {
         String numbersTripple = null;
         if (field >= 1 && field <= 12) {
             numbersTripple = "1st12";
@@ -95,11 +96,13 @@ public class RouletteBean {
         }
         if (numbersTripple != null) {
             Field numbersTrippleField = gameDBBean.getField(numbersTripple);
-            List<Tip> tipsNumbersTrippleWin = tipDBBean.getTipsByField(numbersTrippleField.getField_ID(), gameId);
+            List<Tip> tipsNumbersTrippleWin = tipDBBean.getTipsByField(numbersTrippleField, gameId);
             outgoing += payout(tipsNumbersTrippleWin, 3);
         }
+        return outgoing;
+    }
 
-        // 2to1 Wins
+    private int twoToOneWins(int outgoing, String gameId, int field) throws ServiceException {
         Integer[] twoToOneR = { 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34 };
         Integer[] twoToOneM = { 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35 };
         Integer[] twoToOneL = { 3, 6, 9, 12, 15, 16, 21, 24, 27, 30, 33, 36 };
@@ -115,23 +118,48 @@ public class RouletteBean {
         }
         if (numbersTwoToOne != null) {
             Field numbersTwotoOneField = gameDBBean.getField(numbersTwoToOne);
-            List<Tip> tipsNumbersTwotoOneWin = tipDBBean.getTipsByField(numbersTwotoOneField.getField_ID(), gameId);
+            List<Tip> tipsNumbersTwotoOneWin = tipDBBean.getTipsByField(numbersTwotoOneField, gameId);
             outgoing += payout(tipsNumbersTwotoOneWin, 3);
         }
+        return outgoing;
+    }
 
-        // Set Outgoing
-        gameDBBean.setOutgoing(gameId, outgoing);
+    private int evenOddWins(int outgoing, String gameId, int field) throws ServiceException {
+        String evenOdd = null;
+        if (field % 2 == 0) {
+            evenOdd = "EVEN";
+        } else {
+            evenOdd = "ODD";
+        }
+        if (evenOdd != null) {
+            Field evenOddField = gameDBBean.getField(evenOdd);
+            List<Tip> tipsEvenOddWin = tipDBBean.getTipsByField(evenOddField, gameId);
+            outgoing += payout(tipsEvenOddWin, 2);
+        }
+        return outgoing;
+    }
 
-        // Set Income
-        gameDBBean.setIncome(gameId, gameDBBean.getIncome(gameId));
-
-        // Set Winfield
-        gameDBBean.setWinField(gameId, fieldObject);
-
-        // Delete Tips
-
-        // Set Game to CLOSED
-        setGameStatus(gameId, GameStatus.CLOSED);
+    public int colorWins(int outgoing, String gameId, String Color) throws ServiceException {
+        // Color-Wins
+        String color = null;
+        Field colorField = null;
+        if (Color.equals("R")) {
+            color = "RED";
+            colorField = gameDBBean.getField(color);
+        } else if (Color.equals("B")) {
+            color = "BLACK";
+            colorField = gameDBBean.getField(color);
+        }
+        
+        if (color != null) {
+            List<Tip> tipsColorWin = tipDBBean.getTipsByField(colorField, gameId);
+            outgoing += payout(tipsColorWin, 2);
+        }else{
+            throw new ServiceException("NO_RESULT_EXCEPTION","").addRequestParameter("color", color).addRequestParameter("Color", Color)
+            .setResponseStatusCode(404);
+        }
+        
+        return outgoing;
     }
 
     public int payout(List<Tip> tips, int factor) {

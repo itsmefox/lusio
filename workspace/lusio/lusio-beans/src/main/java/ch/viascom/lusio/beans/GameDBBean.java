@@ -144,8 +144,9 @@ public class GameDBBean {
 		return income;
 	}
 	
-	public Game getOpenGame() throws ServiceException{
+	public List<Game> getOpenGames() throws ServiceException{
 		try {
+		    List<Game> games = new ArrayList<>();
 			CriteriaBuilder cb = em.getCriteriaBuilder();
 
 			CriteriaQuery<Game> q = cb.createQuery(Game.class);
@@ -155,11 +156,20 @@ public class GameDBBean {
 
 			TypedQuery<Game> query = em.createQuery(q);
 
-			Game game = query.getSingleResult();
-			return game;
+			query.setHint("javax.persistence.cache.storeMode", "REFRESH");
+
+	        List<Game> results = query.getResultList();
+	        if (results.size() != 0) {
+	            Iterator<Game> stIterator = results.iterator();
+	            while (stIterator.hasNext()) {
+	                Game game = (Game) stIterator.next();
+	                games.add(game);
+	            }
+	        }  
+			return games;
 		} catch (NoResultException e) {
 			throw new ServiceException("NO_RESULT_EXCEPTION",
-					"There ist no open-game with this id.")
+					"There ist no open-games.")
 					.setResponseStatusCode(404);
 		}
 	}

@@ -164,9 +164,11 @@ public class AccountDBBean {
 	    for (Iterator<Session> iterator = sessions.iterator(); iterator.hasNext();) {
             Session session = (Session) iterator.next();
             em.getTransaction().begin();
+            
             user.getSessions().remove(session);
             em.persist(user);
             em.remove(session);
+            
             em.getTransaction().commit();
         }
 	    

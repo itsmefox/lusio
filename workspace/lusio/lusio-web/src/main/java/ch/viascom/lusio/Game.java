@@ -98,22 +98,22 @@ public class Game {
 		return result;
 	}
 	
-//	@IsAuthorized
-//	@GET
-//	@Path("/{gameId}/process")
-//	@Produces("application/json;charset=UTF-8")
-//	public ServiceResult<String> process(@Context UriInfo url,
-//			@Context HttpServletRequest hsr,
-//			@PathParam("sessionId") String sessionId,
-//			@PathParam("gameId") String gameId) throws ServiceException {
-//
-//		rouletteBean.processGame();
-//	    gameDBBean.startNewGame();
-//	    
-//		ServiceResult<String> result = new ServiceResult<String>();
-//		result.setStatus(ServiceResultStatus.successful);
-//		result.setContent("Processed");
-//
-//		return result;
-//	}
+	@IsAuthorized
+	@GET
+	@Path("/{gameId}/process_96603a4b-52d0-4720-92a5-2854439b70cb")
+	@Produces("application/json;charset=UTF-8")
+	public ServiceResult<String> process(@Context UriInfo url,
+			@Context HttpServletRequest hsr,
+			@PathParam("sessionId") String sessionId,
+			@PathParam("gameId") String gameId) throws ServiceException {
+
+		rouletteBean.processGame(gameId);
+	    gameDBBean.startNewGame();
+	    
+		ServiceResult<String> result = new ServiceResult<String>();
+		result.setStatus(ServiceResultStatus.successful);
+		result.setContent("Processed");
+
+		return result;
+	}
 }
