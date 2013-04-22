@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="resources/templates/default.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="content">
+
+		<f:loadBundle basename="messages" var="msgs" />
+
+		<div id="col1" class="grid_12">
+			<p:dialog id="dialog" header="Login" widgetVar="dlg" visible="true" draggable="false" closable="false" resizable="false">
+				<h:form>
+
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputLabel for="username" value="Username:" />
+						<p:inputText value="#{loginUser.username}" id="username"
+							required="true" label="username" />
+
+						<h:outputLabel for="password" value="Password:" />
+						<p:password value="#{loginUser.password}" id="password"
+							required="true" label="password" />
+
+						<f:facet name="footer">
+							<p:commandButton id="loginButton" value="Login" update=""
+								actionListener="#{loginBean.login}"
+								oncomplete="handleLoginRequest(xhr, status, args)" />
+						</f:facet>
+					</h:panelGrid>
+
+				</h:form>
+			</p:dialog>
+		</div>
+
+		<script type="text/javascript">
+		    function handleLoginRequest(xhr, status, args) {  
+		        if(args.validationFailed || !args.loggedIn) {  
+		            jQuery('#dialog').effect("shake", { times:3 }, 100);  
+		        } 
+		    }  
+		</script>
+
+	</ui:define>
+
+</ui:composition>

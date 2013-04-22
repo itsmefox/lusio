@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<f:loadBundle basename="messages" var="msgs" />
+
+<h:head>
+	<title><ui:insert name="title">  
+	       #{msgs['lusio.title']}       
+		</ui:insert></title>
+</h:head>
+
+<h:body>
+	<!-- <h:outputScript library="javascript" name="util.js" target="head" /> -->
+	<h:outputStylesheet name="css/960gs/reset.css" target="body" />
+	<h:outputStylesheet name="css/960gs/960_12_col.css" target="body" />
+	<h:outputStylesheet name="css/960gs/text.css" target="body" />
+	<h:outputStylesheet name="css/styles.css" target="body" />
+	<h:outputStylesheet name="css/theme.css" target="body" />
+
+	<div id="container">
+		<div id="header">
+			<h:graphicImage id="header_image"
+				value="resources/images/roulette.png" class="left" height="92px"/>
+			<h1 id="header_title">#{msgs['lusio.title']}</h1>
+			<p:commandButton id="logout" icon="ui-icon-key"
+				action="#{loginBean.logout()}" rendered="#{loginBean.loggedInUser != null}"
+				value="Logout" style="float:right; margin-top: 14px;" />
+		</div>
+
+		<div id="body">
+			<div class="container_12">
+				<ui:insert name="content" />
+			</div>
+		</div>
+<!-- 		<div id="footer"> -->
+<!-- 			<p class="center"> -->
+<!-- 				<h:outputText value="#{mavenUtil.getMavenVersion()}" /> -->
+<!-- 			</p> -->
+<!-- 		</div> -->
+	</div>
+
+</h:body>
+</html>

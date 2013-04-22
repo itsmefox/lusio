@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="resources/templates/default.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="content">
+		<f:view>
+			<f:event type="preRenderView"
+				listener="#{loginBean.checkLoginState()}" />
+		</f:view>
+		<f:loadBundle basename="messages" var="msgs" />
+
+		<div id="col1" class="grid_6">
+			
+		</div>
+
+	</ui:define>
+
+</ui:composition>
