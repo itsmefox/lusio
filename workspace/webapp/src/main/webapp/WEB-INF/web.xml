@@ -28,7 +28,7 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>bootstrap</param-value>
+        <param-value>sam</param-value>
     </context-param>
 
     <!-- context-param>

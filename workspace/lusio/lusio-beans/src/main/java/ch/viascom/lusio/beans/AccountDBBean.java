@@ -17,6 +17,8 @@ import javax.persistence.criteria.Root;
 
 import org.joda.time.DateTime;
 
+import com.sun.xml.txw2.IllegalAnnotationException;
+
 import ch.viascom.base.exceptions.ServiceException;
 import ch.viascom.lusio.entity.Account;
 import ch.viascom.lusio.entity.Account_log;
@@ -27,234 +29,227 @@ import ch.viascom.lusio.module.SessionModel;
 
 public class AccountDBBean {
 
-	@Inject
-	EntityManager em;
+    @Inject
+    EntityManager em;
 
-	public final User getDBUser(final String username) throws ServiceException {
-		try {
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+    public final User getDBUser(final String username) throws ServiceException {
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-			CriteriaQuery<User> q = cb.createQuery(User.class);
-			Root<User> c = q.from(User.class);
+            CriteriaQuery<User> q = cb.createQuery(User.class);
+            Root<User> c = q.from(User.class);
 
-			q.select(c).where(cb.equal(c.get("EMail_Address"), username));
+            q.select(c).where(cb.equal(c.get("EMail_Address"), username));
 
-			TypedQuery<User> query = em.createQuery(q);
+            TypedQuery<User> query = em.createQuery(q);
 
-			User user = query.getSingleResult();
+            User user = query.getSingleResult();
 
-			return user;
-		} catch (NoResultException e) {
-			throw new ServiceException("WRONG_CREDENTIALS",
-					"Username or Password is wrong.")
-					.setResponseStatusCode(404);
-		}
-	}
+            return user;
+        } catch (NoResultException e) {
+            throw new ServiceException("WRONG_CREDENTIALS", "Username or Password is wrong.").setException(new IllegalAnnotationException("WRONG_CREDENTIALS"))
+                    .setResponseStatusCode(404);
+        }
+    }
 
-	public AccountModel getAccountInformations(String sessionId)
-			throws ServiceException {
-		try {
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+    public AccountModel getAccountInformations(String sessionId) throws ServiceException {
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-			CriteriaQuery<Session> q = cb.createQuery(Session.class);
-			Root<Session> c = q.from(Session.class);
+            CriteriaQuery<Session> q = cb.createQuery(Session.class);
+            Root<Session> c = q.from(Session.class);
 
-			q.select(c).where(cb.equal(c.get("session_ID"), sessionId));
+            q.select(c).where(cb.equal(c.get("session_ID"), sessionId));
 
-			TypedQuery<Session> query = em.createQuery(q);
-			query.setHint("javax.persistence.cache.storeMode", "REFRESH");
+            TypedQuery<Session> query = em.createQuery(q);
+            query.setHint("javax.persistence.cache.storeMode", "REFRESH");
 
-			User user = query.getSingleResult().getUser();
+            User user = query.getSingleResult().getUser();
 
-			AccountModel accountModel = new AccountModel(user);
+            AccountModel accountModel = new AccountModel(user);
 
-			return accountModel;
-		} catch (NoResultException e) {
-			throw new ServiceException("NO_RESULT_EXCEPTION",
-					"There ist no account with this id.")
-					.setResponseStatusCode(404);
-		}
-	}
+            return accountModel;
+        } catch (NoResultException e) {
+            throw new ServiceException("NO_RESULT_EXCEPTION", "There ist no account with this id.").setResponseStatusCode(404);
+        }
+    }
 
-	public User getUser(String userId) throws ServiceException {
-		try {
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+    public User getUser(String userId) throws ServiceException {
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-			CriteriaQuery<User> q = cb.createQuery(User.class);
-			Root<User> c = q.from(User.class);
+            CriteriaQuery<User> q = cb.createQuery(User.class);
+            Root<User> c = q.from(User.class);
 
-			q.select(c).where(cb.equal(c.get("user_ID"), userId));
+            q.select(c).where(cb.equal(c.get("user_ID"), userId));
 
-			TypedQuery<User> query = em.createQuery(q);
+            TypedQuery<User> query = em.createQuery(q);
 
-			User user = query.getSingleResult();
+            User user = query.getSingleResult();
 
-			return user;
-		} catch (NoResultException e) {
-			throw new ServiceException("NO_RESULT_EXCEPTION",
-					"There ist no user with this id.")
-					.setResponseStatusCode(404);
-		}
-	}
+            return user;
+        } catch (NoResultException e) {
+            throw new ServiceException("NO_RESULT_EXCEPTION", "There ist no user with this id.").setResponseStatusCode(404);
+        }
+    }
 
-	public double getCredit(String userId) {
+    public double getCredit(String userId) {
 
-		double credit = 0;
+        double credit = 0;
 
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
 
-		CriteriaQuery<User> q = cb.createQuery(User.class);
-		Root<User> c = q.from(User.class);
+        CriteriaQuery<User> q = cb.createQuery(User.class);
+        Root<User> c = q.from(User.class);
 
-		q.select(c).where(cb.equal(c.get("user_ID"), userId));
+        q.select(c).where(cb.equal(c.get("user_ID"), userId));
 
-		TypedQuery<User> query = em.createQuery(q);
-		query.setHint("javax.persistence.cache.storeMode", "REFRESH");
+        TypedQuery<User> query = em.createQuery(q);
+        query.setHint("javax.persistence.cache.storeMode", "REFRESH");
 
-		User user = query.getSingleResult();
+        User user = query.getSingleResult();
 
-		List<Account> accounts = user.getAccounts();
+        List<Account> accounts = user.getAccounts();
 
-		for (Iterator<Account> iterator = accounts.iterator(); iterator
-				.hasNext();) {
-			Account account = (Account) iterator.next();
-			credit += account.getCredit();
-		}
+        for (Iterator<Account> iterator = accounts.iterator(); iterator.hasNext();) {
+            Account account = (Account) iterator.next();
+            credit += account.getCredit();
+        }
 
-		return credit;
-	}
+        return credit;
+    }
 
-	public final SessionModel createSessionId(User user, String ipAddress) throws ServiceException {
-	    String guid = UUID.randomUUID().toString();
+    public final SessionModel createSessionId(User user, String ipAddress) throws ServiceException {
+        String guid = UUID.randomUUID().toString();
 
-	    // Delete Session
+        // Delete Session
         deleteSession(user);
-	    
-		SessionModel sessionModel = new SessionModel();
 
-		sessionModel.setSessionId(guid);
+        SessionModel sessionModel = new SessionModel();
 
-		Session session = new Session();
-		session.setDate(DateTime.now().toDate());
-		session.setSession_ID(guid);
-		session.setUser(user);
+        sessionModel.setSessionId(guid);
 
-		List<Session> sessions = new ArrayList<>();
-		sessions.add(session);
+        Session session = new Session();
+        session.setDate(DateTime.now().toDate());
+        session.setSession_ID(guid);
+        session.setUser(user);
 
-		em.getTransaction().begin();
+        List<Session> sessions = new ArrayList<>();
+        sessions.add(session);
 
-		Session sessionRow = new Session();
-		sessionRow.setSession_ID(guid);
-		sessionRow.setUser(user);
-		sessionRow.setIP_Address(ipAddress);
-		sessionRow.setDate(new Date());
+        em.getTransaction().begin();
 
-		em.persist(sessionRow);
+        Session sessionRow = new Session();
+        sessionRow.setSession_ID(guid);
+        sessionRow.setUser(user);
+        sessionRow.setIP_Address(ipAddress);
+        sessionRow.setDate(new Date());
 
-		em.getTransaction().commit();
+        em.persist(sessionRow);
 
-		return sessionModel;
-	}
-	
-	public void deleteSession(User user) throws ServiceException{
+        em.getTransaction().commit();
 
-	    List<Session> sessions = user.getSessions();
+        return sessionModel;
+    }
 
-	    for (Iterator<Session> iterator = sessions.iterator(); iterator.hasNext();) {
+    public void deleteSession(User user) throws ServiceException {
+
+        List<Session> sessions = user.getSessions();
+
+        for (Iterator<Session> iterator = sessions.iterator(); iterator.hasNext();) {
             Session session = (Session) iterator.next();
             em.getTransaction().begin();
-            
+
             user.getSessions().remove(session);
             em.persist(user);
             em.remove(session);
-            
+
             em.getTransaction().commit();
         }
-	    
-	}
 
-	public boolean logout(String sessionId) {
-		Boolean sessionSuccessfullDeleted = true;
+    }
 
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+    public boolean logout(String sessionId) {
+        Boolean sessionSuccessfullDeleted = true;
 
-		CriteriaQuery<Session> q = cb.createQuery(Session.class);
-		Root<Session> c = q.from(Session.class);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
 
-		q.select(c).where(cb.equal(c.get("session_ID"), sessionId));
+        CriteriaQuery<Session> q = cb.createQuery(Session.class);
+        Root<Session> c = q.from(Session.class);
 
-		TypedQuery<Session> query = em.createQuery(q);
+        q.select(c).where(cb.equal(c.get("session_ID"), sessionId));
 
-		Session session = null;
+        TypedQuery<Session> query = em.createQuery(q);
 
-		try {
-			session = query.getSingleResult();
+        Session session = null;
 
-			em.getTransaction().begin();
-			em.remove(session);
-			em.getTransaction().commit();
+        try {
+            session = query.getSingleResult();
 
-		} catch (Exception e) {
-			return false;
-		}
+            em.getTransaction().begin();
+            em.remove(session);
+            em.getTransaction().commit();
 
-		return sessionSuccessfullDeleted;
-	}
+        } catch (Exception e) {
+            return false;
+        }
 
-	public final void cleanSession() {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+        return sessionSuccessfullDeleted;
+    }
 
-		CriteriaQuery<Session> q = cb.createQuery(Session.class);
-		Root<Session> c = q.from(Session.class);
+    public final void cleanSession() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
 
-		q.select(c).where(cb.lessThan(c.<Date> get("date"), new Date()));
+        CriteriaQuery<Session> q = cb.createQuery(Session.class);
+        Root<Session> c = q.from(Session.class);
 
-		TypedQuery<Session> query = em.createQuery(q);
+        q.select(c).where(cb.lessThan(c.<Date> get("date"), new Date()));
 
-		List<Session> results = query.getResultList();
-		if (results.size() != 0) {
-			Iterator<Session> stIterator = results.iterator();
-			while (stIterator.hasNext()) {
-				Session session = (Session) stIterator.next();
-				em.getTransaction().begin();
-				em.remove(session);
-				em.getTransaction().commit();
-			}
-		}
-	}
-	
-	public final void payout(String userId, int amount){
-		em.getTransaction().begin();
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+        TypedQuery<Session> query = em.createQuery(q);
 
-		CriteriaQuery<User> q = cb.createQuery(User.class);
-		Root<User> c = q.from(User.class);
+        List<Session> results = query.getResultList();
+        if (results.size() != 0) {
+            Iterator<Session> stIterator = results.iterator();
+            while (stIterator.hasNext()) {
+                Session session = (Session) stIterator.next();
+                em.getTransaction().begin();
+                em.remove(session);
+                em.getTransaction().commit();
+            }
+        }
+    }
 
-		q.select(c).where(cb.equal(c.get("user_ID"), userId));
+    public final void payout(String userId, int amount) {
+        em.getTransaction().begin();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
 
-		TypedQuery<User> query = em.createQuery(q);
+        CriteriaQuery<User> q = cb.createQuery(User.class);
+        Root<User> c = q.from(User.class);
 
-		User user = query.getSingleResult();
-		List<Account> accounts = user.getAccounts();
-		
-		Account account = accounts.get(0);
-		em.lock(account, LockModeType.PESSIMISTIC_READ);
-		
-		int newAmount = account.getCredit() + amount;
+        q.select(c).where(cb.equal(c.get("user_ID"), userId));
 
-		Account_log log = new Account_log();
-		log.setAccount(account);
-		log.setDate(new Date());
-		log.setOld_value(account.getCredit());
-		log.setNew_value(newAmount);
-		log.setAccount_log_ID(UUID.randomUUID().toString());
+        TypedQuery<User> query = em.createQuery(q);
 
-		account.setCredit(newAmount);
-		account.getAccountLogs().add(log);
-		em.merge(account);
-		em.persist(log);
-		
-		em.getTransaction().commit();
-	}
+        User user = query.getSingleResult();
+        List<Account> accounts = user.getAccounts();
+
+        Account account = accounts.get(0);
+        em.lock(account, LockModeType.PESSIMISTIC_READ);
+
+        int newAmount = account.getCredit() + amount;
+
+        Account_log log = new Account_log();
+        log.setAccount(account);
+        log.setDate(new Date());
+        log.setOld_value(account.getCredit());
+        log.setNew_value(newAmount);
+        log.setAccount_log_ID(UUID.randomUUID().toString());
+
+        account.setCredit(newAmount);
+        account.getAccountLogs().add(log);
+        em.merge(account);
+        em.persist(log);
+
+        em.getTransaction().commit();
+    }
 }

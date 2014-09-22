@@ -21,16 +21,22 @@
 	<h:outputStylesheet name="css/960gs/960_12_col.css" target="body" />
 	<h:outputStylesheet name="css/960gs/text.css" target="body" />
 	<h:outputStylesheet name="css/styles.css" target="body" />
-	<h:outputStylesheet name="css/theme.css" target="body" />
 
+	<p:growl id="growl" showDetail="true" sticky="true" />
 	<div id="container">
 		<div id="header">
 			<h:graphicImage id="header_image"
-				value="resources/images/roulette.png" class="left" height="92px"/>
+				value="resources/images/roulette.png" class="left" height="92px" />
 			<h1 id="header_title">#{msgs['lusio.title']}</h1>
+			
 			<p:commandButton id="logout" icon="ui-icon-key"
-				action="#{loginBean.logout()}" rendered="#{loginBean.loggedInUser != null}"
-				value="Logout" style="float:right; margin-top: 14px;" />
+				actionListener="#{loginBean.logout}"
+				rendered="#{loginBean.loggedInUser != null}" value="Logout"
+				style="float:right; margin-top: 14px;" />
+				
+			<p:commandButton id="Casino" icon="ui-icon-key"
+				rendered="#{loginBean.loggedInUser != null}" value="Casino"
+				style="float:right; margin-top: 14px;" />
 		</div>
 
 		<div id="body">
@@ -38,11 +44,6 @@
 				<ui:insert name="content" />
 			</div>
 		</div>
-<!-- 		<div id="footer"> -->
-<!-- 			<p class="center"> -->
-<!-- 				<h:outputText value="#{mavenUtil.getMavenVersion()}" /> -->
-<!-- 			</p> -->
-<!-- 		</div> -->
 	</div>
 
 </h:body>

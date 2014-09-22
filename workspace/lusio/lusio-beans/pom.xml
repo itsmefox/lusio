@@ -10,10 +10,8 @@
 	<name>lusio-beans</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>ch.viascom.vision.share</groupId>
-			<artifactId>base-jersey</artifactId>
-		</dependency>
+		<groupId>ch.viascom.base</groupId>
+		<artifactId>jersey</artifactId>
 	</dependencies>
 
 </project>

@@ -12,8 +12,56 @@
 		</f:view>
 		<f:loadBundle basename="messages" var="msgs" />
 
-		<div id="col1" class="grid_6">
-			
+		<div id="col1" class="grid_4">
+			<h:form>
+				<p:menu model="#{menuBean.model}"/>  
+			</h:form>
+		</div>
+		<div id="col1" class="grid_8">
+			<p:panel id="table" header="Roulette-Tisch" toggleable="false"
+				closable="false" toggleSpeed="500" closeSpeed="500"
+				widgetVar="panel">
+
+				<img src="resources/images/roulette_table.jpg" width="790px;" />
+			</p:panel>
+
+		</div>
+		<div id="col2" class="grid_12" style="margin-top: 20px;">
+			<p:panel id="tips" header="Alle-Tips" toggleable="false"
+				closable="false" toggleSpeed="500" closeSpeed="500"
+				widgetVar="panel">
+				<h:form id="form">
+
+					<p:dataTable id="tips" var="tip" value="#{tipTableBean.tips}"
+						rowKey="#{tip.tip_ID}" selection="#{tipTableBean.selectedTipModel}"
+						selectionMode="single">
+
+						<f:facet name="header">
+            Click "View" button after selecting a row to see details
+        </f:facet>
+
+						<p:column headerText="Datum">
+            #{tip.date}
+        </p:column>
+
+						<p:column headerText="Betrag">
+            #{tip.amount}
+        </p:column>
+
+						<p:column headerText="Feld">
+            #{tip.field.value}
+        </p:column>
+
+						<f:facet name="footer">
+<!-- 							<p:commandButton id="viewButton" value="View" -->
+<!-- 								icon="ui-icon-search" update=":form:display" -->
+<!-- 								oncomplete="carDialog.show()" /> -->
+						</f:facet>
+
+					</p:dataTable>
+				</h:form>
+			</p:panel>
+
 		</div>
 
 	</ui:define>

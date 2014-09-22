@@ -73,9 +73,9 @@
 		<dependencies>
 
 			<dependency>
-				<groupId>ch.viascom.vision.share</groupId>
-				<artifactId>base-jersey</artifactId>
-				<version>3.1.1-SNAPSHOT</version>
+				<groupId>ch.viascom.base</groupId>
+				<artifactId>jersey</artifactId>
+				<version>3.1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.viascom</groupId>

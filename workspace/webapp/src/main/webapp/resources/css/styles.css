@@ -48,7 +48,7 @@
 	margin-left: 127px;
 	padding-top: 4px;
 	line-height: 48px;
-	color: #333;
+	color: #000;
 	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.3);
 	position: absolute;
 }
@@ -126,4 +126,15 @@
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+}
+
+.ui-icon-dot-green {
+	width: 16px;
+	height: 16px;
+	background-image: url("/webapp-1.0.0-SNAPSHOT/resources/images/bullet_green.png") !important;
+}
+.ui-icon-dot-red {
+	width: 16px;
+	height: 16px;
+	background-image: url("/webapp-1.0.0-SNAPSHOT/resources/images/bullet_red.png") !important;
 }

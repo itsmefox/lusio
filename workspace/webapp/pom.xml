@@ -9,9 +9,24 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>ch.viascom.vision.share</groupId>
+			<artifactId>base-jersey</artifactId>
+			<version>3.1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.viascom.vision.share</groupId>
+			<artifactId>base-java</artifactId>
+			<version>3.1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>3.4.1</version>
+			<version>3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ocpsoft</groupId>
@@ -20,7 +35,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
-			<artifactId>bootstrap</artifactId>
+			<artifactId>sam</artifactId>
 			<version>1.0.10</version>
 		</dependency>
 
@@ -29,8 +44,8 @@
 			<artifactId>picketlink-idm-ldap</artifactId>
 			<version>1.1.5.CR01</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -56,7 +71,7 @@
 		<dependency>
 			<groupId>org.jboss.spec</groupId>
 			<artifactId>jboss-javaee-6.0</artifactId>
-			<version>2.0.0.Final</version>
+			<version>3.0.2.Final</version>
 			<type>pom</type>
 		</dependency>
 
@@ -135,7 +150,7 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
 	<repositories>
 		<repository>
 			<id>repository.jboss.org</id>
